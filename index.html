@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Creator Link in Bio Hub</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome 6 for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- QR Code Library CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        tiktok: {
+                            cyan: 'var(--color-primary, #00f2fe)',
+                            pink: 'var(--color-secondary, #fe2c55)',
+                            bg: '#09090b',
+                            card: 'rgba(22, 22, 29, 0.75)',
+                            border: 'rgba(255, 255, 255, 0.12)'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif']
+                    },
+                    animation: {
+                        'pulse-glow': 'pulseGlow 3s infinite alternate',
+                        'float': 'float 5s ease-in-out infinite',
+                        'spin-slow': 'spin 12s linear infinite'
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%': { boxShadow: '0 0 15px rgba(var(--primary-rgb, 0, 242, 254), 0.3), 0 0 30px rgba(var(--secondary-rgb, 254, 44, 85), 0.15)' },
+                            '100%': { boxShadow: '0 0 25px rgba(var(--secondary-rgb, 254, 44, 85), 0.4), 0 0 45px rgba(var(--primary-rgb, 0, 242, 254), 0.25)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-6px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --color-primary: #00f2fe;
+            --color-secondary: #fe2c55;
+            --primary-rgb: 0, 242, 254;
+            --secondary-rgb: 254, 44, 85;
+            --gradient-accent: linear-gradient(135deg, #00f2fe 0%, #7928ca 50%, #fe2c55 100%);
+        }
+
+        /* Preset Themes */
+        body[data-theme="purple"] {
+            --color-primary: #a855f7;
+            --color-secondary: #ec4899;
+            --primary-rgb: 168, 85, 247;
+            --secondary-rgb: 236, 72, 153;
+            --gradient-accent: linear-gradient(135deg, #a855f7 0%, #6366f1 50%, #ec4899 100%);
+        }
+
+        body[data-theme="gold"] {
+            --color-primary: #f59e0b;
+            --color-secondary: #ef4444;
+            --primary-rgb: 245, 158, 11;
+            --secondary-rgb: 239, 68, 68;
+            --gradient-accent: linear-gradient(135deg, #f59e0b 0%, #f97316 50%, #ef4444 100%);
+        }
+
+        body[data-theme="emerald"] {
+            --color-primary: #10b981;
+            --color-secondary: #06b6d4;
+            --primary-rgb: 16, 185, 129;
+            --secondary-rgb: 6, 182, 212;
+            --gradient-accent: linear-gradient(135deg, #10b981 0%, #3b82f6 50%, #06b6d4 100%);
+        }
+
+        body {
+            background-color: #060608;
+            color: #f3f4f6;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+        }
+
+        .glass-panel {
+            background: rgba(18, 18, 24, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-button {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.22);
+            transform: translateY(-2px);
+        }
+
+        .gradient-text {
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .accent-btn {
+            background: var(--gradient-accent);
+            background-size: 200% 200%;
+            transition: all 0.3s ease;
+        }
+
+        .accent-btn:hover {
+            background-position: right center;
+            opacity: 0.95;
+            box-shadow: 0 10px 25px -5px rgba(var(--secondary-rgb), 0.4);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #060608; }
+        ::-webkit-scrollbar-thumb { background: #1f1f2e; border-radius: 99px; }
+        ::-webkit-scrollbar-thumb:hover { background: #2f2f45; }
+    </style>
+</head>
+<body data-theme="tiktok" class="relative overflow-x-hidden selection:bg-pink-500 selection:text-white flex flex-col items-center">
+
+    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-xl h-96 bg-gradient-to-r from-[var(--color-primary)]/20 via-purple-600/15 to-[var(--color-secondary)]/20 blur-[130px] pointer-events-none -z-10 rounded-full"></div>
+    <div class="fixed bottom-10 left-5 w-80 h-80 bg-[var(--color-primary)]/10 blur-[140px] pointer-events-none -z-10 rounded-full"></div>
+    <div class="fixed top-1/3 right-5 w-80 h-80 bg-[var(--color-secondary)]/10 blur-[140px] pointer-events-none -z-10 rounded-full"></div>
+
+    <header class="w-full max-w-md px-4 pt-5 pb-2 flex justify-between items-center z-20">
+        <div class="flex items-center gap-2">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white/5 border border-white/10 text-white shadow-sm backdrop-blur-md">
+                <i class="fa-brands fa-tiktok text-[var(--color-secondary)] mr-1.5 animate-pulse"></i> Link Hub
+            </span>
+        </div>
+        <div class="flex items-center gap-2">
+            <button id="openQrBtn" class="glass-button w-9 h-9 rounded-full flex items-center justify-center text-xs text-white/90 hover:text-white" title="Generate Page QR Code">
+                <i class="fa-solid fa-qrcode"></i>
+            </button>
+            <button id="openCustomizerBtn" class="accent-btn px-4 py-2 rounded-full text-xs font-bold text-white shadow-lg flex items-center gap-2">
+                <i class="fa-solid fa-sliders text-white"></i>
+                <span>Customize</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="w-full max-w-md px-4 py-4 flex-1 flex flex-col items-center gap-5 z-10">
+
+        <!-- Profile Section Card -->
+        <section class="w-full glass-panel rounded-3xl p-6 text-center flex flex-col items-center relative overflow-hidden">
+            <!-- Background Glow Accent inside card -->
+            <div class="absolute -top-12 -left-12 w-32 h-32 bg-[var(--color-primary)]/20 blur-3xl rounded-full pointer-events-none"></div>
+            <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-[var(--color-secondary)]/20 blur-3xl rounded-full pointer-events-none"></div>
+
+            <!-- Avatar Image with Neon Halo -->
+            <div class="relative cursor-pointer group mb-3" id="avatarContainer">
+                <div class="w-28 h-28 rounded-full p-1 bg-gradient-to-tr from-[var(--color-primary)] via-white to-[var(--color-secondary)] animate-pulse-glow shadow-2xl transition-transform group-hover:scale-105 duration-300">
+                    <img id="profileAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" 
+                         alt="TikTok Creator Avatar" 
+                         class="w-full h-full object-cover rounded-full border-2 border-black/80"
+                         onerror="this.src='https://placehold.co/300x300/18181b/ffffff?text=TikTok+Creator'">
+                </div>
+                <!-- Verification Checkmark Badge -->
+                <div id="verifiedBadge" class="absolute bottom-1 right-1 bg-[var(--color-primary)] text-black rounded-full w-7 h-7 flex items-center justify-center text-xs shadow-lg font-bold border-2 border-black" title="Verified TikTok Creator">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+            </div>
+
+            <!-- Profile Info Header -->
+            <h1 id="profileName" class="font-heading text-2xl font-extrabold tracking-tight text-white flex items-center justify-center gap-1.5">
+                Alex Rivera
+            </h1>
+            <p id="profileHandle" class="text-xs font-semibold tracking-wide text-[var(--color-primary)] mt-0.5 opacity-90">@alexrivera_vlogs</p>
+            
+            <p id="profileBio" class="text-xs text-gray-300 mt-3 px-2 leading-relaxed font-normal max-w-xs">
+                ✨ Tech reviewer & digital creator | Sharing daily viral camera hacks, desk setups & tech reviews 🚀
+            </p>
+
+            <!-- TikTok Stats Row -->
+            <div class="grid grid-cols-3 gap-2 w-full mt-5 p-3 rounded-2xl bg-black/40 border border-white/5 text-center">
+                <div class="flex flex-col">
+                    <span id="statFollowers" class="font-heading font-bold text-sm sm:text-base text-white">1.4M</span>
+                    <span class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Followers</span>
+                </div>
+                <div class="flex flex-col border-x border-white/10">
+                    <span id="statLikes" class="font-heading font-bold text-sm sm:text-base text-white">28.9M</span>
+                    <span class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Likes</span>
+                </div>
+                <div class="flex flex-col">
+                    <span id="statFollowing" class="font-heading font-bold text-sm sm:text-base text-white">342</span>
+                    <span class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Following</span>
+                </div>
+            </div>
+
+            <!-- Big Follow Call-to-Action -->
+            <a id="followTiktokBtn" href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer" 
+               class="w-full mt-4 py-3 px-6 rounded-2xl font-bold text-xs uppercase tracking-wider text-white accent-btn shadow-xl flex items-center justify-center gap-2 group">
+                <i class="fa-brands fa-tiktok text-base group-hover:scale-110 transition-transform"></i>
+                <span>Follow on TikTok</span>
+                <i class="fa-solid fa-external-link text-[10px] opacity-75"></i>
+            </a>
+        </section>
+
+        <div class="w-full glass-panel rounded-2xl p-3 px-4 flex items-center justify-between text-xs text-gray-300 border border-white/5">
+            <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-[var(--color-primary)] animate-ping"></div>
+                <span class="font-medium">Total Link Clicks Captured:</span>
+            </div>
+            <span id="totalClicksCounter" class="font-heading font-bold text-sm text-[var(--color-primary)]">0</span>
+        </div>
+
+        <section class="w-full space-y-3">
+            <div class="flex items-center justify-between px-1">
+                <h2 class="text-xs font-bold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
+                    <i class="fa-solid fa-link text-[var(--color-primary)]"></i> Featured Links
+                </h2>
+                <span class="text-[10px] text-gray-400 font-mono" id="linksCountBadge">0 links</span>
+            </div>
+
+            <div id="linksContainer" class="space-y-3">
+                <!-- Links dynamically injected here -->
+            </div>
+        </section>
+
+        <section class="w-full glass-panel rounded-3xl p-4 space-y-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="relative flex h-2.5 w-2.5">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-secondary)] opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-[var(--color-secondary)]"></span>
+                    </span>
+                    <h3 class="font-heading font-bold text-xs uppercase tracking-wider text-white">Pinned Video Spotlight</h3>
+                </div>
+                <span id="spotlightViews" class="text-[11px] font-semibold text-[var(--color-primary)] bg-[var(--color-primary)]/10 px-2.5 py-0.5 rounded-full border border-[var(--color-primary)]/20">
+                    🔥 2.4M Views
+                </span>
+            </div>
+
+            <div class="relative w-full rounded-2xl overflow-hidden bg-black/80 aspect-[16/9] border border-white/10 group flex flex-col justify-end">
+                <img id="spotlightThumb" src="https://images.unsplash.com/photo-1526738549149-8e07eca6c147?auto=format&fit=crop&w=800&q=80" 
+                     alt="Spotlight Video Thumbnail" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 transition-transform duration-500">
+                
+                <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent"></div>
+
+                <a id="spotlightPlayLink" href="https://tiktok.com" target="_blank" rel="noopener noreferrer" 
+                   class="absolute inset-0 flex items-center justify-center cursor-pointer group-hover:scale-105 transition-transform">
+                    <div class="w-14 h-14 rounded-full bg-[var(--color-secondary)] text-white flex items-center justify-center text-lg shadow-xl shadow-[var(--color-secondary)]/30 border border-white/20">
+                        <i class="fa-solid fa-play ml-1"></i>
+                    </div>
+                </a>
+
+                <div class="relative p-3.5 z-10 text-left pointer-events-none">
+                    <p id="spotlightTitle" class="text-xs font-semibold text-white line-clamp-2 leading-snug">
+                        Top 5 Desk Setup Upgrades You Didn't Know You Needed in 2026! 🚀💻 #tech #desksetup
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="w-full pt-1">
+            <div id="socialsContainer" class="flex items-center justify-center gap-2.5 flex-wrap">
+                <!-- Social links rendered here -->
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="w-full max-w-md px-4 mt-6 text-center text-xs text-gray-500 z-10 flex flex-col items-center gap-1.5 pb-8">
+        <p class="flex items-center gap-1">
+            Created for <span class="gradient-text font-bold">TikTok Creators</span>
+        </p>
+        <p class="text-[10px] text-gray-600">All links redirect securely. Data saved locally.</p>
+    </footer>
+
+    <div id="customizerDrawer" class="fixed inset-0 z-50 hidden flex justify-end bg-black/70 backdrop-blur-md transition-opacity">
+        <div class="w-full max-w-md h-full bg-[#0d0d12] border-l border-white/10 p-5 overflow-y-auto flex flex-col justify-between shadow-2xl relative">
+            
+            <div>
+                <!-- Header -->
+                <div class="flex items-center justify-between pb-4 mb-4 border-b border-white/10">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-[var(--color-primary)]/10 text-[var(--color-primary)] flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-sliders"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-heading font-bold text-base text-white">Profile Customizer</h3>
+                            <p class="text-[10px] text-gray-400">Live preview update as you edit</p>
+                        </div>
+                    </div>
+                    <button id="closeCustomizerBtn" class="w-8 h-8 rounded-full bg-white/5 text-gray-400 hover:text-white flex items-center justify-center">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <!-- Color Theme Selector -->
+                <div class="mb-5">
+                    <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Color Accent Theme</label>
+                    <div class="grid grid-cols-4 gap-2">
+                        <button type="button" data-theme-btn="tiktok" class="p-2 rounded-xl bg-white/5 border border-white/10 hover:border-white/30 flex flex-col items-center gap-1 group">
+                            <div class="w-5 h-5 rounded-full bg-gradient-to-r from-[#00f2fe] to-[#fe2c55]"></div>
+                            <span class="text-[10px] text-gray-300 group-hover:text-white">TikTok</span>
+                        </button>
+                        <button type="button" data-theme-btn="purple" class="p-2 rounded-xl bg-white/5 border border-white/10 hover:border-white/30 flex flex-col items-center gap-1 group">
+                            <div class="w-5 h-5 rounded-full bg-gradient-to-r from-[#a855f7] to-[#ec4899]"></div>
+                            <span class="text-[10px] text-gray-300 group-hover:text-white">Neon</span>
+                        </button>
+                        <button type="button" data-theme-btn="gold" class="p-2 rounded-xl bg-white/5 border border-white/10 hover:border-white/30 flex flex-col items-center gap-1 group">
+                            <div class="w-5 h-5 rounded-full bg-gradient-to-r from-[#f59e0b] to-[#ef4444]"></div>
+                            <span class="text-[10px] text-gray-300 group-hover:text-white">Gold</span>
+                        </button>
+                        <button type="button" data-theme-btn="emerald" class="p-2 rounded-xl bg-white/5 border border-white/10 hover:border-white/30 flex flex-col items-center gap-1 group">
+                            <div class="w-5 h-5 rounded-full bg-gradient-to-r from-[#10b981] to-[#06b6d4]"></div>
+                            <span class="text-[10px] text-gray-300 group-hover:text-white">Emerald</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Profile Customizer Tabs -->
+                <div class="flex border-b border-white/10 mb-4 text-xs font-semibold">
+                    <button id="tabProfileBtn" class="flex-1 py-2 text-[var(--color-primary)] border-b-2 border-[var(--color-primary)]">Profile</button>
+                    <button id="tabLinksBtn" class="flex-1 py-2 text-gray-400 hover:text-white">Links Manager</button>
+                    <button id="tabSpotlightBtn" class="flex-1 py-2 text-gray-400 hover:text-white">Video</button>
+                </div>
+
+                <!-- TAB 1: Profile & Stats -->
+                <div id="tabProfileContent" class="space-y-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Display Name</label>
+                        <input type="text" id="editName" class="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[var(--color-primary)]">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-300 mb-1">TikTok Handle</label>
+                            <input type="text" id="editHandle" class="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[var(--color-primary)]">
+                        </div>
+                        <div class="flex items-center pt-5">
+                            <label class="flex items-center gap-2 cursor-pointer text-xs text-gray-300">
+                                <input type="checkbox" id="editVerified" class="w-4 h-4 rounded bg-black border-white/10 text-[var(--color-primary)] focus:ring-0">
+                                <span>Verified Badge</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Bio Text</label>
+                        <textarea id="editBio" rows="2" class="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[var(--color-primary)]"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Avatar Image URL</label>
+                        <input type="url" id="editAvatar" class="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[var(--color-primary)] mb-2">
+                        <!-- Quick Preset Avatars -->
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] text-gray-400">Presets:</span>
+                            <button type="button" class="preset-avatar-btn w-6 h-6 rounded-full overflow-hidden border border-white/20" data-avatar="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80">
+                                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" class="w-full h-full object-cover">
+                            </button>
+                            <button type="button" class="preset-avatar-btn w-6 h-6 rounded-full overflow-hidden border border-white/20" data-avatar="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=400&q=80">
+                                <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=100&q=80" class="w-full h-full object-cover">
+                            </button>
+                            <button type="button" class="preset-avatar-btn w-6 h-6 rounded-full overflow-hidden border border-white/20" data-avatar="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" class="w-full h-full object-cover">
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 pt-2">
+                        <div>
+                            <label class="block text-[11px] font-medium text-gray-300 mb-1">Followers</label>
+                            <input type="text" id="editFollowers" class="w-full bg-black/50 border border-white/10 rounded-xl px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[var(--color-primary)]">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-medium text-gray-300 mb-1">Likes</label>
+                            <input type="text" id="editLikes" class="w-full bg-black/50 border border-white/10 rounded-xl px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[var(--color-primary)]">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-medium text-gray-300 mb-1">Following</label>
+                            <input type="text" id="editFollowing" class="w-full bg-black/50 border border-white/10 rounded-xl px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[var(--color-primary)]">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: Dynamic Links Manager -->
+                <div id="tabLinksContent" class="space-y-3 hidden">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold text-gray-300">Custom Links</span>
+                        <button id="addNewLinkBtn" type="button" class="text-xs text-[var(--color-primary)] font-bold hover:underline flex items-center gap-1">
+                            <i class="fa-solid fa-plus"></i> Add New Link
+                        </button>
+                    </div>
+
+                    <div id="editLinksList" class="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+                        <!-- Editable link items injected here -->
+                    </div>
+                </div>
+
+                <!-- TAB 3: Video Spotlight Editor -->
+                <div id="tabSpotlightContent" class="space-y-3 hidden">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Video Caption/Title</label>
+                        <input type="text" id="editSpotlightTitle" class="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[var(--color-primary)]">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Views Display Text</label>
+                        <input type="text" id="editSpotlightViews" class="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[var(--color-primary)]">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Video Thumbnail URL</label>
+                        <input type="url" id="editSpotlightThumb" class="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[var(--color-primary)]">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">TikTok Video URL</label>
+                        <input type="url" id="editSpotlightUrl" class="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[var(--color-primary)]">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Drawer Bottom Buttons -->
+            <div class="pt-4 border-t border-white/10 flex gap-2">
+                <button id="resetDefaultsBtn" type="button" class="w-1/3 py-2.5 rounded-xl border border-white/10 text-xs font-semibold text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
+                    Reset
+                </button>
+                <button id="saveCustomizerBtn" type="button" class="w-2/3 py-2.5 rounded-xl accent-btn text-xs font-bold text-white shadow-lg">
+                    Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="qrModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+        <div class="glass-panel w-full max-w-xs rounded-3xl p-6 border border-white/15 text-center relative flex flex-col items-center shadow-2xl">
+            <button id="closeQrBtn" class="absolute top-4 right-4 text-gray-400 hover:text-white w-7 h-7 rounded-full bg-white/5 flex items-center justify-center text-xs">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="font-heading font-bold text-base text-white mb-1">Scan QR Code</h3>
+            <p class="text-[11px] text-gray-400 mb-4">Share your link-in-bio page easily with fans!</p>
+            
+            <div class="p-3 bg-white rounded-2xl shadow-inner mb-4 flex items-center justify-center">
+                <div id="qrcode"></div>
+            </div>
+
+            <button id="copyPageUrlBtn" class="w-full py-2 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-semibold text-white border border-white/10 flex items-center justify-center gap-2">
+                <i class="fa-regular fa-copy"></i> Copy Page URL
+            </button>
+        </div>
+    </div>
+
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <script>
+        /* Default Application State Data */
+        const defaultState = {
+            theme: "tiktok",
+            profile: {
+                name: "Alex Rivera",
+                handle: "@alexrivera_vlogs",
+                bio: "✨ Tech reviewer & digital creator | Sharing daily viral camera hacks, desk setups & tech reviews 🚀",
+                avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80",
+                followers: "1.4M",
+                likes: "28.9M",
+                following: "342",
+                isVerified: true
+            },
+            spotlight: {
+                title: "Top 5 Desk Setup Upgrades You Didn't Know You Needed in 2026! 🚀💻 #tech #desksetup",
+                views: "2.4M Views",
+                thumbnail: "https://images.unsplash.com/photo-1526738549149-8e07eca6c147?auto=format&fit=crop&w=800&q=80",
+                url: "https://www.tiktok.com"
+            },
+            links: [
+                { id: 1, title: "🔥 Watch Latest Viral Video", subtitle: "Top Tech Recommendations", url: "https://tiktok.com", icon: "fa-solid fa-fire", clicks: 14205, spotlight: true },
+                { id: 2, title: "🛍️ My Gear & Desk Setup List", subtitle: "Amazon Influencer Storefront", url: "https://amazon.com", icon: "fa-solid fa-bag-shopping", clicks: 8930, spotlight: false },
+                { id: 3, title: "📺 YouTube Full Tech Reviews", subtitle: "4K Long-form Content", url: "https://youtube.com", icon: "fa-brands fa-youtube", clicks: 5210, spotlight: false },
+                { id: 4, title: "📸 Instagram Daily Stories", subtitle: "Behind the Scenes Content", url: "https://instagram.com", icon: "fa-brands fa-instagram", clicks: 4320, spotlight: false },
+                { id: 5, title: "💼 Business & Brand Inquiries", subtitle: "Send Sponsorship Offers", url: "mailto:collab@alexrivera.com", icon: "fa-solid fa-envelope", clicks: 1204, spotlight: false }
+            ],
+            socials: [
+                { platform: "TikTok", icon: "fa-brands fa-tiktok", url: "https://tiktok.com" },
+                { platform: "YouTube", icon: "fa-brands fa-youtube", url: "https://youtube.com" },
+                { platform: "Instagram", icon: "fa-brands fa-instagram", url: "https://instagram.com" },
+                { platform: "Twitter/X", icon: "fa-brands fa-x-twitter", url: "https://x.com" },
+                { platform: "Discord", icon: "fa-brands fa-discord", url: "https://discord.com" }
+            ]
+        };
+
+        // Application State Pointer
+        let state = JSON.parse(localStorage.getItem('tiktok_link_hub_state')) || defaultState;
+
+        // Save State Function
+        function saveState() {
+            localStorage.setItem('tiktok_link_hub_state', JSON.stringify(state));
+            renderPage();
+        }
+
+        // Render Page UI from State
+        function renderPage() {
+            // Theme Setting
+            document.body.setAttribute('data-theme', state.theme || 'tiktok');
+
+            // Profile info
+            document.getElementById('profileName').textContent = state.profile.name;
+            document.getElementById('profileHandle').textContent = state.profile.handle;
+            document.getElementById('profileBio').textContent = state.profile.bio;
+            document.getElementById('profileAvatar').src = state.profile.avatar;
+            document.getElementById('followTiktokBtn').href = `https://tiktok.com/${state.profile.handle.replace('@','')}`;
+
+            // Verification badge
+            document.getElementById('verifiedBadge').style.display = state.profile.isVerified ? 'flex' : 'none';
+
+            // Stats
+            document.getElementById('statFollowers').textContent = state.profile.followers;
+            document.getElementById('statLikes').textContent = state.profile.likes;
+            document.getElementById('statFollowing').textContent = state.profile.following;
+
+            // Links count & total clicks analytics
+            const totalClicks = state.links.reduce((acc, curr) => acc + (curr.clicks || 0), 0);
+            document.getElementById('totalClicksCounter').textContent = totalClicks.toLocaleString();
+            document.getElementById('linksCountBadge').textContent = `${state.links.length} links`;
+
+            // Spotlight Video
+            document.getElementById('spotlightTitle').textContent = state.spotlight.title;
+            document.getElementById('spotlightViews').textContent = state.spotlight.views;
+            document.getElementById('spotlightThumb').src = state.spotlight.thumbnail;
+            document.getElementById('spotlightPlayLink').href = state.spotlight.url;
+
+            // Links Rendering
+            const container = document.getElementById('linksContainer');
+            container.innerHTML = '';
+
+            state.links.forEach(link => {
+                const isSpot = link.spotlight;
+                const card = document.createElement('div');
+                card.className = `group relative w-full glass-button rounded-2xl p-3.5 flex items-center justify-between cursor-pointer transition-all ${
+                    isSpot ? 'ring-1 ring-[var(--color-secondary)]/50 bg-gradient-to-r from-[var(--color-secondary)]/10 to-transparent' : ''
+                }`;
+
+                card.innerHTML = `
+                    <div class="flex items-center gap-3.5 z-10 overflow-hidden">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-base shrink-0 ${
+                            isSpot ? 'accent-btn text-white shadow-md' : 'bg-white/10 text-[var(--color-primary)]'
+                        }">
+                            <i class="${link.icon || 'fa-solid fa-link'}"></i>
+                        </div>
+                        <div class="truncate">
+                            <h3 class="text-xs font-bold text-white group-hover:text-[var(--color-primary)] transition-colors truncate">${link.title}</h3>
+                            ${link.subtitle ? `<p class="text-[10px] text-gray-400 truncate">${link.subtitle}</p>` : ''}
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 z-10 shrink-0 ml-2">
+                        <span class="text-[10px] font-mono text-gray-400 bg-white/5 px-2 py-0.5 rounded-full">${formatNumber(link.clicks)} clicks</span>
+                        <i class="fa-solid fa-chevron-right text-xs text-gray-500 group-hover:text-white group-hover:translate-x-0.5 transition-all"></i>
+                    </div>
+                `;
+
+                card.addEventListener('click', () => {
+                    link.clicks = (link.clicks || 0) + 1;
+                    saveState();
+                    showToast(`Opening ${link.title}...`);
+                    window.open(link.url, '_blank');
+                });
+
+                container.appendChild(card);
+            });
+
+            // Social Icons Rendering
+            const socialsContainer = document.getElementById('socialsContainer');
+            socialsContainer.innerHTML = '';
+            state.socials.forEach(soc => {
+                const a = document.createElement('a');
+                a.href = soc.url;
+                a.target = '_blank';
+                a.className = 'w-10 h-10 rounded-2xl glass-button flex items-center justify-center text-gray-300 hover:text-[var(--color-primary)] hover:scale-110 text-base transition-all';
+                a.title = soc.platform;
+                a.innerHTML = `<i class="${soc.icon}"></i>`;
+                socialsContainer.appendChild(a);
+            });
+        }
+
+        // Helper: Number formatter
+        function formatNumber(num) {
+            if (!num) return '0';
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
+            return num;
+        }
+
+        // Toast Notification System
+        function showToast(msg) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'glass-panel px-4 py-2.5 rounded-2xl text-xs font-medium text-white shadow-xl border border-[var(--color-primary)]/30 flex items-center gap-2 animate-bounce';
+            toast.innerHTML = `<i class="fa-solid fa-circle-check text-[var(--color-primary)]"></i> ${msg}`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        }
+
+        // Populate Customizer Inputs
+        function populateCustomizerInputs() {
+            document.getElementById('editName').value = state.profile.name;
+            document.getElementById('editHandle').value = state.profile.handle;
+            document.getElementById('editBio').value = state.profile.bio;
+            document.getElementById('editAvatar').value = state.profile.avatar;
+            document.getElementById('editVerified').checked = state.profile.isVerified;
+            document.getElementById('editFollowers').value = state.profile.followers;
+            document.getElementById('editLikes').value = state.profile.likes;
+            document.getElementById('editFollowing').value = state.profile.following;
+
+            document.getElementById('editSpotlightTitle').value = state.spotlight.title;
+            document.getElementById('editSpotlightViews').value = state.spotlight.views;
+            document.getElementById('editSpotlightThumb').value = state.spotlight.thumbnail;
+            document.getElementById('editSpotlightUrl').value = state.spotlight.url;
+
+            renderLinksEditList();
+        }
+
+        // Render Link Editor list inside drawer
+        function renderLinksEditList() {
+            const list = document.getElementById('editLinksList');
+            list.innerHTML = '';
+
+            state.links.forEach((link, idx) => {
+                const item = document.createElement('div');
+                item.className = 'p-2.5 rounded-xl bg-black/40 border border-white/10 space-y-2';
+                item.innerHTML = `
+                    <div class="flex items-center justify-between gap-2">
+                        <input type="text" data-idx="${idx}" data-field="title" value="${link.title}" class="w-full bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-xs text-white" placeholder="Link Title">
+                        <button type="button" class="delete-link-btn text-red-400 hover:text-red-300 px-1 text-xs" data-idx="${idx}">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-1.5">
+                        <input type="text" data-idx="${idx}" data-field="subtitle" value="${link.subtitle || ''}" class="bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-[11px] text-gray-300" placeholder="Subtitle (optional)">
+                        <input type="text" data-idx="${idx}" data-field="url" value="${link.url}" class="bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-[11px] text-gray-300" placeholder="URL">
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+
+            // Bind input update events
+            list.querySelectorAll('input').forEach(inp => {
+                inp.addEventListener('input', (e) => {
+                    const idx = e.target.getAttribute('data-idx');
+                    const field = e.target.getAttribute('data-field');
+                    state.links[idx][field] = e.target.value;
+                });
+            });
+
+            // Bind delete link events
+            list.querySelectorAll('.delete-link-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const idx = e.currentTarget.getAttribute('data-idx');
+                    state.links.splice(idx, 1);
+                    renderLinksEditList();
+                });
+            });
+        }
+
+        // Event Listeners initialization
+        window.addEventListener('DOMContentLoaded', () => {
+            renderPage();
+
+            const drawer = document.getElementById('customizerDrawer');
+            const qrModal = document.getElementById('qrModal');
+
+            // Open/Close Customizer
+            document.getElementById('openCustomizerBtn').addEventListener('click', () => {
+                populateCustomizerInputs();
+                drawer.classList.remove('hidden');
+            });
+            document.getElementById('closeCustomizerBtn').addEventListener('click', () => {
+                drawer.classList.add('hidden');
+            });
+
+            // Theme selector buttons
+            document.querySelectorAll('[data-theme-btn]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    state.theme = btn.getAttribute('data-theme-btn');
+                    renderPage();
+                });
+            });
+
+            // Tab Switcher inside Drawer
+            const tabP = document.getElementById('tabProfileBtn');
+            const tabL = document.getElementById('tabLinksBtn');
+            const tabS = document.getElementById('tabSpotlightBtn');
+            const contentP = document.getElementById('tabProfileContent');
+            const contentL = document.getElementById('tabLinksContent');
+            const contentS = document.getElementById('tabSpotlightContent');
+
+            tabP.addEventListener('click', () => {
+                tabP.className = 'flex-1 py-2 text-[var(--color-primary)] border-b-2 border-[var(--color-primary)]';
+                tabL.className = tabS.className = 'flex-1 py-2 text-gray-400 hover:text-white';
+                contentP.classList.remove('hidden');
+                contentL.classList.add('hidden');
+                contentS.classList.add('hidden');
+            });
+
+            tabL.addEventListener('click', () => {
+                tabL.className = 'flex-1 py-2 text-[var(--color-primary)] border-b-2 border-[var(--color-primary)]';
+                tabP.className = tabS.className = 'flex-1 py-2 text-gray-400 hover:text-white';
+                contentL.classList.remove('hidden');
+                contentP.classList.add('hidden');
+                contentS.classList.add('hidden');
+            });
+
+            tabS.addEventListener('click', () => {
+                tabS.className = 'flex-1 py-2 text-[var(--color-primary)] border-b-2 border-[var(--color-primary)]';
+                tabP.className = tabL.className = 'flex-1 py-2 text-gray-400 hover:text-white';
+                contentS.classList.remove('hidden');
+                contentP.classList.add('hidden');
+                contentL.classList.add('hidden');
+            });
+
+            // Avatar Presets Click
+            document.querySelectorAll('.preset-avatar-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const avatarUrl = btn.getAttribute('data-avatar');
+                    document.getElementById('editAvatar').value = avatarUrl;
+                    state.profile.avatar = avatarUrl;
+                    renderPage();
+                });
+            });
+
+            // Add New Link
+            document.getElementById('addNewLinkBtn').addEventListener('click', () => {
+                state.links.unshift({
+                    id: Date.now(),
+                    title: "✨ New Link Title",
+                    subtitle: "Description or Tagline",
+                    url: "https://tiktok.com",
+                    icon: "fa-solid fa-star",
+                    clicks: 0,
+                    spotlight: false
+                });
+                renderLinksEditList();
+            });
+
+            // Save Customizer State
+            document.getElementById('saveCustomizerBtn').addEventListener('click', () => {
+                state.profile.name = document.getElementById('editName').value;
+                state.profile.handle = document.getElementById('editHandle').value;
+                state.profile.bio = document.getElementById('editBio').value;
+                state.profile.avatar = document.getElementById('editAvatar').value;
+                state.profile.isVerified = document.getElementById('editVerified').checked;
+                state.profile.followers = document.getElementById('editFollowers').value;
+                state.profile.likes = document.getElementById('editLikes').value;
+                state.profile.following = document.getElementById('editFollowing').value;
+
+                state.spotlight.title = document.getElementById('editSpotlightTitle').value;
+                state.spotlight.views = document.getElementById('editSpotlightViews').value;
+                state.spotlight.thumbnail = document.getElementById('editSpotlightThumb').value;
+                state.spotlight.url = document.getElementById('editSpotlightUrl').value;
+
+                saveState();
+                drawer.classList.add('hidden');
+                showToast("Profile & Links saved successfully!");
+            });
+
+            // Reset Defaults
+            document.getElementById('resetDefaultsBtn').addEventListener('click', () => {
+                state = JSON.parse(JSON.stringify(defaultState));
+                saveState();
+                populateCustomizerInputs();
+                showToast("Reset profile to default parameters.");
+            });
+
+            // QR Code Modal Generator
+            document.getElementById('openQrBtn').addEventListener('click', () => {
+                const qrContainer = document.getElementById('qrcode');
+                qrContainer.innerHTML = '';
+                new QRCode(qrContainer, {
+                    text: window.location.href,
+                    width: 160,
+                    height: 160,
+                    colorDark : "#000000",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.H
+                });
+                qrModal.classList.remove('hidden');
+            });
+
+            document.getElementById('closeQrBtn').addEventListener('click', () => {
+                qrModal.classList.add('hidden');
+            });
+
+            document.getElementById('copyPageUrlBtn').addEventListener('click', () => {
+                document.execCommand('copy');
+                showToast("URL copied to clipboard!");
+            });
+        });
+    </script>
+</body>
+</html>
